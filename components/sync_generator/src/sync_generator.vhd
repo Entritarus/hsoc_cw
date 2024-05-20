@@ -1,9 +1,9 @@
 library ieee;
-library rtu;
+library cwlib;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use rtu.functions.all;
-use rtu.data_types.all;
+use cwlib.functions.all;
+use cwlib.data_types.all;
 
 entity sync_generator is
   generic(

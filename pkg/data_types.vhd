@@ -6,6 +6,18 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 package data_types is
+    type pattern_t is (PATTERN_UNIFORM_COLOR, PATTERN_MEMORY);
+
+    type vga_config_t is record
+        HOR_DISPLAY     : natural;
+        HOR_FRONT_PORCH : natural;
+        HOR_SYNC        : natural;
+        HOR_BACK_PORCH  : natural;
+        VER_DISPLAY     : natural;
+        VER_FRONT_PORCH : natural;
+        VER_SYNC        : natural;
+        VER_BACK_PORCH  : natural;
+    end record;
     --! @defgroup types_slv
     --! @brief Deriver types based on std_logic_vector base type
     --! @{
@@ -56,6 +68,7 @@ package data_types is
 	alias a_int_2D  is array_of_integers_2D;
 	alias a_int_3D  is array_of_integers_3D;
 
+    
 end package;
 
 

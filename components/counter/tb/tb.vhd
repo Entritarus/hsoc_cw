@@ -1,9 +1,8 @@
 library std;
 library ieee;
-library rtu;
 library osvvm;
 library vunit_lib;
-library rtu_test;
+library cwlib;
 
 context vunit_lib.vunit_context;
 
@@ -12,8 +11,8 @@ use ieee.numeric_std.all;
 use osvvm.RandomPkg.all;
 use std.env.all;
 use vunit_lib.com_pkg.all;
-use rtu.functions.all;
-use rtu_test.procedures.all;
+use cwlib.functions.all;
+use cwlib.procedures.all;
 
 
 entity tb is
@@ -40,7 +39,7 @@ begin
   -----------------------------------------------------------------------------
   -- DUT instantation
   -----------------------------------------------------------------------------
-  DUT: entity rtu.counter
+  DUT: entity cwlib.counter
   generic map(
     COUNTER_MAX_VALUE => COUNTER_MAX_VALUE)
   port map(

@@ -1,9 +1,8 @@
 library std;
 library ieee;
-library rtu;
+library cwlib;
 library osvvm;
 library vunit_lib;
-library rtu_test;
 
 context vunit_lib.vunit_context;
 
@@ -12,9 +11,9 @@ use ieee.numeric_std.all;
 use osvvm.RandomPkg.all;
 use std.env.all;
 use vunit_lib.com_pkg.all;
-use rtu.functions.all;
-use rtu.data_types.all;
-use rtu_test.procedures.all;
+use cwlib.functions.all;
+use cwlib.data_types.all;
+use cwlib.procedures.all;
 
 
 entity tb is
@@ -77,7 +76,7 @@ begin
   -----------------------------------------------------------------------------
   -- DUT instantation
   -----------------------------------------------------------------------------
-  DUT: entity rtu.sync_generator
+  DUT: entity cwlib.sync_generator
   generic map(
     VGA_CONFIG => VGA_CONFIG)
   port map(
