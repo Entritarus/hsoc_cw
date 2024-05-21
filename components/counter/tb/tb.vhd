@@ -13,6 +13,7 @@ use std.env.all;
 use vunit_lib.com_pkg.all;
 use cwlib.functions.all;
 use cwlib.procedures.all;
+use cwlib.data_types.all;
 
 
 entity tb is
@@ -28,6 +29,7 @@ architecture RTL of tb is
   -----------------------------------------------------------------------------
   signal clk       : std_logic := '0';
   signal rst       : std_logic := '0';
+	signal srst			 : sl := '0';
   signal en        : std_logic := '0';
   signal o_counter : unsigned(log2c(COUNTER_MAX_VALUE+1)-1 downto 0);
 
@@ -45,6 +47,7 @@ begin
   port map(
     clk       => clk,
     rst       => rst,
+		srst			=> srst,
     en        => en,
     o_counter => o_counter);
 
