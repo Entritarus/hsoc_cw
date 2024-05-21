@@ -14,7 +14,7 @@ entity counter is
 		rst       : in sl;
 		srst			: in sl;
 		en        : in sl;
-		o_counter : out unsigned(log2c(COUNTER_MAX_VALUE+1)-1 downto 0)
+		o_counter : out unsigned(log2c(COUNTER_MAX_VALUE)-1 downto 0)
 	);
 end entity;
 
