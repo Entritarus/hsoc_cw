@@ -5,10 +5,7 @@ library cwlib;
 use cwlib.functions.all;
 use cwlib.data_types.all;
 
-entity main is
-  generic(
-    PATTERN : pattern_t := PATTERN_UNIFORM_COLOR
-  );
+entity vga is
   port(
     clk       : in sl; -- 50 MHz quartz clock
     rst       : in sl; -- switch used as a reset
@@ -30,7 +27,7 @@ entity main is
   );
 end entity;
 
-architecture RTL of main is
+architecture RTL of vga is
   -- VGA interface (1024 x 768)
   constant VGA_CONFIG : vga_config_t := (
     HOR_DISPLAY     => 1024,
