@@ -7,7 +7,16 @@ use cwlib.data_types.all;
 
 entity sync_generator is
   generic(
-    VGA_CONFIG : vga_config_t
+    VGA_CONFIG : vga_config_t := (
+		HOR_DISPLAY     => 1024,
+		 HOR_FRONT_PORCH => 24,
+		 HOR_SYNC        => 136,
+		 HOR_BACK_PORCH  => 160,
+		 VER_DISPLAY     => 768,
+		 VER_FRONT_PORCH => 3,
+		 VER_SYNC        => 6,
+		 VER_BACK_PORCH  => 29 
+	 )
   );
   port(
     clk       : in sl;

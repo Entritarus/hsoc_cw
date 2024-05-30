@@ -1,7 +1,3 @@
--- synopsis directives:
--- synthesis VHDL_INPUT_VERSION VHDL_2008
--- synthesis LIBRARY edi
-
 library ieee;
 use ieee.std_logic_1164.all;
 
