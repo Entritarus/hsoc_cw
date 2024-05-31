@@ -60,17 +60,16 @@ architecture RTL of vga is
   -- SYNC Generator output
   signal sync_hor, sync_ver, sync_denable : std_logic;
 
-  signal srst : sl := '0';
+  -- data control signals
+  signal check_for_input : boolean := false;
+  signal output_enable_reg, output_enable_next : sl := '0';
+  signal gated_denable : sl := '0';
+
   signal red_reg,     red_next    : slv(7 downto 0) := (others => '0');
   signal green_reg,   green_next  : slv(7 downto 0) := (others => '0');
   signal blue_reg,    blue_next   : slv(7 downto 0) := (others => '0');
 
-  signal red_reg_reg,   red_reg_next    : slv(7 downto 0) := (others => '0');
-  signal green_reg_reg, green_reg_next  : slv(7 downto 0) := (others => '0');
-  signal blue_reg_reg,  blue_reg_next   : slv(7 downto 0) := (others => '0');
 begin
-
-  srst <= i_sop;
 
   process(clk, rst) is
   begin
@@ -78,16 +77,14 @@ begin
       red_reg   <= (others => '0');
       green_reg <= (others => '0');
       blue_reg  <= (others => '0');
-      red_reg_reg <= (others => '0');
-      green_reg_reg <= (others => '0');
-      blue_reg_reg <= (others => '0');
+      output_enable_reg <= '0';
     elsif rising_edge(clk) then
-      red_reg   <= red_next;
-      green_reg <= green_next;
-      blue_reg  <= blue_next;
-      red_reg_reg <= red_reg_next;
-      green_reg_reg <= green_reg_next;
-      blue_reg_reg <= blue_reg_next;
+      if check_for_input or output_enable_reg = '1' then
+        red_reg   <= red_next;
+        green_reg <= green_next;
+        blue_reg  <= blue_next;
+      end if;
+      output_enable_reg <= output_enable_next;
     end if;
   end process;
 
@@ -97,9 +94,9 @@ begin
   port map(
     clk       => clk,
     rst       => rst,
-		srst			=> srst,
     en        => '1',
-    o_counter => counter_hor);
+    o_counter => counter_hor
+  );
      
   -- instantiate vertical counter
   VER_COUNTER: entity cwlib.counter
@@ -107,13 +104,21 @@ begin
   port map(
     clk       => clk,
     rst       => rst,
-		srst			=> srst,
     en        => counter_ver_en,
-    o_counter => counter_ver);
+    o_counter => counter_ver
+  );
 
   -- counter signal
   counter_ver_en <= '1' when counter_hor = HOR_COUNTER_MAX_VALUE-144 else
                     '0';
+
+  check_for_input <= to_integer(counter_hor) = 0 and 
+                     to_integer(counter_ver) = 0;
+  output_enable_next <= i_valid when check_for_input else
+                        output_enable_reg;
+
+  gated_denable <= sync_denable when output_enable_reg = '1' else
+                   '0';
 
 
   -- Instantiate SYNC generator
@@ -122,7 +127,6 @@ begin
   port map(
     clk         => clk,
     rst         => rst,
-    srst        => srst,
     i_hcounter  => counter_hor,
     i_vcounter  => counter_ver,
     o_denable   => sync_denable,
@@ -140,19 +144,17 @@ begin
                    green_reg;
     blue_next   <= i_data(23 downto 16) when i_valid = '1' else
                    blue_reg;
-
-    red_reg_next <= red_reg;
-    green_reg_next <= green_reg;
-    blue_reg_next <= blue_reg;
   
-    o_ready     <= sync_denable;
+    --o_ready     <= '1' when check_for_input or gated_denable = '1' else
+    --               '0';
+    o_ready     <= '1';
     -- video interface output 
     o_hsync     <= sync_hor;
     o_vsync     <= sync_ver;
     o_denable   <= sync_denable;
-    o_color_r   <= red_reg_reg;
-    o_color_g   <= green_reg_reg;
-    o_color_b   <= blue_reg_reg;
+    o_color_r   <= red_reg;
+    o_color_g   <= green_reg;
+    o_color_b   <= blue_reg;
     o_video_clk <= clk;
 
 end architecture;

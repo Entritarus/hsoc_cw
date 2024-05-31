@@ -21,7 +21,6 @@ entity sync_generator is
   port(
     clk       : in sl;
     rst       : in sl;
-		srst			: in sl;
     -- input counters
     i_hcounter : in  unsigned(
       log2c(VGA_CONFIG.HOR_DISPLAY+VGA_CONFIG.HOR_FRONT_PORCH+
@@ -75,15 +74,9 @@ begin
 			v_sync_reg <= '0';
 			denable_reg <= '0';
     elsif rising_edge(clk) then
-			if srst = '1' then
-				h_sync_reg <= '0';
-				v_sync_reg <= '0';
-				denable_reg <= '0';
-			else
-				h_sync_reg <= h_sync_next;
-				v_sync_reg <= v_sync_next;
-				denable_reg <= denable_next;
-			end if;
+      h_sync_reg <= h_sync_next;
+      v_sync_reg <= v_sync_next;
+      denable_reg <= denable_next;
 		else
 			h_sync_reg <= h_sync_reg;
 			v_sync_reg <= v_sync_reg;
