@@ -146,7 +146,7 @@ begin
         wait for 1 ms;
         push_avalon_stream(net, stream_master, x"1337C0DE", '1', '0');
         
-        wait for 20 ms;
+        wait for 25 ms;
 				
       end if;
     end loop;
