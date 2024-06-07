@@ -1,0 +1,7 @@
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
+#define IMAGE_MAX_WIDTH 1024
+#define IMAGE_MAX_HEIGHT 768
+
+#endif
