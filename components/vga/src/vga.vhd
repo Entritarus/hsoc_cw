@@ -13,7 +13,6 @@ entity vga is
     -- avalon-st signals
     o_ready         : out sl;
     i_valid         : in  sl;
-    i_sop           : in  sl;
     i_data          : in  slv(31 downto 0);
     
     -- VGA interface signals
@@ -138,16 +137,16 @@ begin
     -- from mpu:        |red|green|blue|00|
     -- from avalon-st:  |00|blue|green|red|
     
-    red_next    <= i_data(7 downto 0) when i_valid = '1' else
+    red_next    <= i_data(31 downto 24) when i_valid = '1' else
                    red_reg;
-    green_next  <= i_data(15 downto 8) when i_valid = '1' else
+    green_next  <= i_data(23 downto 16) when i_valid = '1' else
                    green_reg;
-    blue_next   <= i_data(23 downto 16) when i_valid = '1' else
+    blue_next   <= i_data(15 downto 8) when i_valid = '1' else
                    blue_reg;
   
-    --o_ready     <= '1' when check_for_input or gated_denable = '1' else
-    --               '0';
-    o_ready     <= '1';
+    o_ready     <= '1' when check_for_input or gated_denable = '1' else
+                   '0';
+    --o_ready     <= '1';
     -- video interface output 
     o_hsync     <= sync_hor;
     o_vsync     <= sync_ver;

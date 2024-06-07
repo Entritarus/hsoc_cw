@@ -21,7 +21,7 @@
    {
       datum _sortIndex
       {
-         value = "5";
+         value = "2";
          type = "int";
       }
    }
@@ -29,7 +29,7 @@
    {
       datum _sortIndex
       {
-         value = "4";
+         value = "5";
          type = "int";
       }
    }
@@ -37,7 +37,7 @@
    {
       datum _sortIndex
       {
-         value = "2";
+         value = "3";
          type = "int";
       }
    }
@@ -45,7 +45,7 @@
    {
       datum _sortIndex
       {
-         value = "3";
+         value = "4";
          type = "int";
       }
    }
@@ -67,6 +67,14 @@
       datum _sortIndex
       {
          value = "1";
+         type = "int";
+      }
+   }
+   element sc_fifo_0
+   {
+      datum _sortIndex
+      {
+         value = "6";
          type = "int";
       }
    }
@@ -92,11 +100,6 @@
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
  <interface name="clk" internal="clk_0.clk_in" type="clock" dir="end" />
- <interface
-   name="dma_avalon_source"
-   internal="dma_read_master_0.Data_Source"
-   type="avalon_streaming"
-   dir="start" />
  <interface name="hps_io" internal="hps_0.hps_io" type="conduit" dir="end" />
  <interface name="memory" internal="hps_0.memory" type="conduit" dir="end" />
  <interface
@@ -105,6 +108,11 @@
    type="clock"
    dir="start" />
  <interface name="rst" internal="clk_0.clk_in_reset" type="reset" dir="end" />
+ <interface
+   name="sc_fifo_0_out"
+   internal="sc_fifo_0.out"
+   type="avalon_streaming"
+   dir="start" />
  <module name="clk_0" kind="clock_source" version="22.1" enabled="1">
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="clockFrequencyKnown" value="true" />
@@ -125,21 +133,21 @@
    kind="dma_read_master"
    version="22.1"
    enabled="1">
-  <parameter name="BURST_ENABLE" value="0" />
+  <parameter name="BURST_ENABLE" value="1" />
   <parameter name="CHANNEL_ENABLE" value="0" />
   <parameter name="CHANNEL_WIDTH" value="8" />
   <parameter name="DATA_WIDTH" value="32" />
   <parameter name="ERROR_ENABLE" value="0" />
   <parameter name="ERROR_WIDTH" value="8" />
-  <parameter name="FIFO_DEPTH" value="32" />
+  <parameter name="FIFO_DEPTH" value="64" />
   <parameter name="FIFO_SPEED_OPTIMIZATION" value="1" />
   <parameter name="FIX_ADDRESS_WIDTH" value="32" />
   <parameter name="GUI_BURST_WRAPPING_SUPPORT" value="0" />
-  <parameter name="GUI_MAX_BURST_COUNT" value="2" />
+  <parameter name="GUI_MAX_BURST_COUNT" value="16" />
   <parameter name="GUI_PROGRAMMABLE_BURST_ENABLE" value="0" />
   <parameter name="GUI_STRIDE_WIDTH" value="1" />
   <parameter name="LENGTH_WIDTH" value="32" />
-  <parameter name="PACKET_ENABLE" value="1" />
+  <parameter name="PACKET_ENABLE" value="0" />
   <parameter name="STRIDE_ENABLE" value="0" />
   <parameter name="TRANSFER_TYPE" value="Aligned Accesses" />
   <parameter name="USE_FIX_ADDRESS_WIDTH" value="0" />
@@ -899,6 +907,26 @@
   <parameter name="gui_switchover_mode">Automatic Switchover</parameter>
   <parameter name="gui_use_locked" value="false" />
  </module>
+ <module
+   name="sc_fifo_0"
+   kind="altera_avalon_sc_fifo"
+   version="22.1"
+   enabled="1">
+  <parameter name="BITS_PER_SYMBOL" value="8" />
+  <parameter name="CHANNEL_WIDTH" value="0" />
+  <parameter name="EMPTY_LATENCY" value="3" />
+  <parameter name="ENABLE_EXPLICIT_MAXCHANNEL" value="false" />
+  <parameter name="ERROR_WIDTH" value="0" />
+  <parameter name="EXPLICIT_MAXCHANNEL" value="0" />
+  <parameter name="FIFO_DEPTH" value="128" />
+  <parameter name="SYMBOLS_PER_BEAT" value="4" />
+  <parameter name="USE_ALMOST_EMPTY_IF" value="0" />
+  <parameter name="USE_ALMOST_FULL_IF" value="0" />
+  <parameter name="USE_FILL_LEVEL" value="0" />
+  <parameter name="USE_MEMORY_BLOCKS" value="1" />
+  <parameter name="USE_PACKETS" value="0" />
+  <parameter name="USE_STORE_FORWARD" value="0" />
+ </module>
  <connection
    kind="avalon"
    version="22.1"
@@ -929,6 +957,11 @@
  <connection
    kind="avalon_streaming"
    version="22.1"
+   start="dma_read_master_0.Data_Source"
+   end="sc_fifo_0.in" />
+ <connection
+   kind="avalon_streaming"
+   version="22.1"
    start="modular_sgdma_dispatcher_0.Read_Command_Source"
    end="dma_read_master_0.Command_Sink" />
  <connection
@@ -942,6 +975,7 @@
    version="22.1"
    start="pll_0.outclk0"
    end="dma_read_master_0.Clock" />
+ <connection kind="clock" version="22.1" start="pll_0.outclk0" end="sc_fifo_0.clk" />
  <connection
    kind="clock"
    version="22.1"
@@ -985,6 +1019,11 @@
    kind="reset"
    version="22.1"
    start="clk_0.clk_reset"
+   end="sc_fifo_0.clk_reset" />
+ <connection
+   kind="reset"
+   version="22.1"
+   start="clk_0.clk_reset"
    end="modular_sgdma_dispatcher_0.clock_reset" />
  <connection kind="reset" version="22.1" start="clk_0.clk_reset" end="pll_0.reset" />
  <connection
@@ -992,6 +1031,11 @@
    version="22.1"
    start="hps_0.h2f_reset"
    end="dma_read_master_0.Clock_reset" />
+ <connection
+   kind="reset"
+   version="22.1"
+   start="hps_0.h2f_reset"
+   end="sc_fifo_0.clk_reset" />
  <connection
    kind="reset"
    version="22.1"

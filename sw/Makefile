@@ -12,7 +12,7 @@ OBJ:=$(subst .c,.o,$(OBJ))
 OUT:=out/main.elf
 DIR:=$(sort $(dir $(OBJ))) $(sort $(dir $(OUT)))
 INC:=-Iinc -Ilib
-LIB:=-Llib -lmsgdma -lcma -lm
+LIB:=-Llib -lmsgdma -lcma -lm -lpthread
 
 all:$(DIR) $(OUT)
 
